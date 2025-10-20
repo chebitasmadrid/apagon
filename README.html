@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Caída de servidores de Amazon (AWS) — Informe</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#ff8a00;--glass:rgba(255,255,255,0.03)}
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#e6eef6;background:linear-gradient(180deg,#071021 0%,#071226 60%);}
+    .container{max-width:980px;margin:32px auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#102a43,#06374f);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700}
+    h1{margin:0;font-size:20px}
+    p.lead{color:var(--muted);margin-top:6px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:20px}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.6);backdrop-filter:blur(6px)}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .badge{background:var(--glass);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted)}
+    .timeline{list-style:none;padding:0;margin:0}
+    .timeline li{padding:12px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    .affected{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .chip{background:rgba(255,255,255,0.03);padding:8px 10px;border-radius:8px;font-size:13px;color:var(--muted)}
+    .controls{display:flex;gap:8px;margin-top:12px}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:8px;color:#eaf2ff;cursor:pointer}
+    button.primary{background:var(--accent);border:none;color:#071021}
+    .right{position:sticky;top:24px}
+    .stats{display:flex;gap:8px;flex-wrap:wrap}
+    .stat{flex:1 1 120px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:8px}
+    .footer{margin-top:18px;color:var(--muted);font-size:13px}
+    pre{white-space:pre-wrap;background:#071422;padding:12px;border-radius:8px;color:#cfe8ff;font-size:13px}
+    a{color:var(--accent);text-decoration:none}
+    /* responsive */
+    @media (max-width:900px){.grid{grid-template-columns:1fr} .right{position:static}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">AWS</div>
+      <div>
+        <h1>Caída de servidores de Amazon (AWS) — Informe</h1>
+        <p class="lead">Página informativa con resumen, timeline, servicios afectados y recomendaciones para empresas y usuarios.</p>
+        <div class="meta">
+          <div class="badge">Fecha del incidente: 20 oct 2025</div>
+          <div class="badge">Región afectada: us-east-1 (Virginia)</div>
+          <div class="badge">Estado: Suscitado / En recuperación</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main>
+        <section class="card" id="resumen">
+          <h2 style="margin-top:0">Resumen</h2>
+          <p style="color:var(--muted)">El 20 de octubre de 2025 se registró un incidente importante que afectó a Amazon Web Services (AWS), especialmente en la región <strong>us-east-1</strong>. El fallo provocó aumentos de latencia y errores en múltiples servicios gestionados por AWS, con impacto en numerosas aplicaciones y sitios a nivel mundial.</p>
+          <div class="controls">
+            <button id="toggleTimeline">Mostrar/Ocultar timeline</button>
+            <button class="primary" id="downloadBtn">Descargar resumen (JSON)</button>
+          </div>
+        </section>
+
+        <section class="card" id="timelineCard" style="margin-top:14px;display:none">
+          <h3>Timeline (aproximado)</h3>
+          <ul class="timeline" id="timelineList">
+            <li><strong>03:11 AM ET</strong> — Primeras alertas de latencia y errores en us-east-1.</li>
+            <li><strong>04:00 AM ET</strong> — Reportes masivos en Downdetector y redes sociales; plataformas como Snapchat y Fortnite reportan fallos.</li>
+            <li><strong>07:30 AM ET</strong> — AWS identifica un subsistema relacionado con balanceadores de carga como posible causa y limita nuevas instancias.</li>
+            <li><strong>09:40 AM ET</strong> — Progresiva restauración de servicios; se siguen registrando errores intermitentes.</li>
+            <li><strong>12:13 PM ET</strong> — AWS informa de medidas implementadas para la restauración completa (estado sujeto a cambios).</li>
+          </ul>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+          <h3>Servicios y apps reportadas como afectadas</h3>
+          <div class="affected" id="affectedList">
+            <div class="chip">Snapchat</div>
+            <div class="chip">Fortnite / Epic Games</div>
+            <div class="chip">Alexa / Ring</div>
+            <div class="chip">Duolingo</div>
+            <div class="chip">Venmo / Robinhood</div>
+            <div class="chip">Canva</div>
+            <div class="chip">Airtable</div>
+            <div class="chip">PlayStation Network</div>
+            <div class="chip">Perplexity / ChatGPT (servicios dependientes)</div>
+          </div>
+          <p class="footer">*Lista compilada a partir de reportes públicos y medios. Puede no ser exhaustiva.</p>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+          <h3>Consejos para empresas</h3>
+          <ul style="color:var(--muted)">
+            <li>Implementar arquitectura multi-cloud o estrategia de redundancia para servicios críticos.</li>
+            <li>Probar procedimientos de recuperación y failover periódicamente.</li>
+            <li>Monitorizar dependencias externas y comunicarlas a los equipos técnicos y de producto.</li>
+            <li>Configurar límites de creación automática de instancias y revisiones de balanceadores de carga.</li>
+          </ul>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+          <h3>Consejos para usuarios</h3>
+          <ul style="color:var(--muted)">
+            <li>Comprueba el estado oficial de AWS en <code>health.aws.amazon.com</code> antes de asumir que una app local es la única afectada.</li>
+            <li>Si dependen de servicios críticos (financieros, seguridad), ten canales alternativos de comunicación y verificación.</li>
+            <li>Guardar capturas o registros si necesitas reclamar por servicios afectados.</li>
+          </ul>
+        </section>
+
+        <section class="card" style="margin-top:14px" id="rawLogs">
+          <h3>Notas técnicas (ejemplo)</h3>
+          <pre id="sampleJson">{
+  "incidente":"AWS outage",
+  "fecha":"2025-10-20",
+  "region":"us-east-1",
+  "estatus":"parcialmente recuperado",
+  "servicios_afectados":["EC2","DynamoDB","ELB"]
+}</pre>
+        </section>
+      </main>
+
+      <aside class="right">
+        <div class="card">
+          <h4 style="margin-top:0">Resumen rápido</h4>
+          <div class="stats">
+            <div class="stat">
+              <div style="font-size:12px;color:var(--muted)">Reportes en Downdetector</div>
+              <div style="font-weight:700;font-size:18px">> 1M</div>
+            </div>
+            <div class="stat">
+              <div style="font-size:12px;color:var(--muted)">Empresas afectadas (estim.)</div>
+              <div style="font-weight:700;font-size:18px">500+</div>
+            </div>
+            <div class="stat">
+              <div style="font-size:12px;color:var(--muted)">Impacto</div>
+              <div style="font-weight:700;font-size:18px">Global</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <h5 style="margin:6px 0">Fuentes principales</h5>
+            <ul style="color:var(--muted);padding-left:18px;margin:0">
+              <li>Artículos de medios internacionales y AWS Health Dashboard.</li>
+              <li>Reportes en tiempo real de trackers como Downdetector.</li>
+            </ul>
+            <p class="footer">(Abre el panel 'Fuentes' abajo para ver enlaces útiles.)</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h4 style="margin-top:0">Fuentes</h4>
+          <p style="color:var(--muted);font-size:13px">He recopilado información pública de medios y del panel de estado de AWS. Para referencias directas consulta medios principales como Reuters, The Verge o la página de estado de AWS.</p>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button id="openReuters">Abrir Reuters</button>
+            <button id="openAWS">Panel AWS</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer style="text-align:center;margin-top:22px;color:var(--muted);font-size:13px">
+      Página generada automáticamente — Información orientativa y sujeta a actualización.
+    </footer>
+  </div>
+
+  <script>
+    // Interactividad básica
+    document.getElementById('toggleTimeline').addEventListener('click', function(){
+      const c = document.getElementById('timelineCard');
+      c.style.display = c.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function(){
+      const data = {
+        incidente: 'AWS outage',
+        fecha: '2025-10-20',
+        region: 'us-east-1',
+        servicios_afectados: ['Snapchat','Fortnite','Alexa','Duolingo','Venmo','Canva']
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'aws-outage-summary-2025-10-20.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('openReuters').addEventListener('click', function(){
+      window.open('https://www.reuters.com/business/retail-consumer/amazons-cloud-unit-reports-outage-several-websites-down-2025-10-20/','_blank');
+    });
+    document.getElementById('openAWS').addEventListener('click', function(){
+      window.open('https://health.aws.amazon.com/','_blank');
+    });
+  </script>
+</body>
+</html>
